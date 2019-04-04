@@ -60,7 +60,7 @@ def densenet121_model(img_rows, img_cols, color_type=1, nb_dense_block=4, growth
 
     # From architecture for ImageNet (Table 1 in the paper)
     nb_filter = 64
-    nb_layers = [6,12,24,16] # For DenseNet-121
+    nb_layers = [1,1,2,1] # For DenseNet-121
 
     # Initial convolution
     x = ZeroPadding2D((3, 3), name='conv1_zeropadding')(img_input)
@@ -93,14 +93,14 @@ def densenet121_model(img_rows, img_cols, color_type=1, nb_dense_block=4, growth
 
     model = Model(img_input, x_fc, name='densenet')
 
-    if K.image_dim_ordering() == 'th':
-      # Use pre-trained weights for Theano backend
-      weights_path = 'imagenet_models/densenet121_weights_th.h5'
-    else:
-      # Use pre-trained weights for Tensorflow backend
-      weights_path = 'imagenet_models/densenet121_weights_tf.h5'
-
-    model.load_weights(weights_path, by_name=True)
+    # if K.image_dim_ordering() == 'th':
+    #   # Use pre-trained weights for Theano backend
+    #   weights_path = 'imagenet_models/densenet121_weights_th.h5'
+    # else:
+    #   # Use pre-trained weights for Tensorflow backend
+    #   weights_path = 'imagenet_models/densenet121_weights_tf.h5'
+    #
+    # model.load_weights(weights_path, by_name=True)
 
     # Truncate and replace softmax layer for transfer learning
     # Cannot use model.layers.pop() since model is not of Sequential() type
@@ -218,13 +218,14 @@ if __name__ == '__main__':
 
     img_rows, img_cols = 224, 224 # Resolution of inputs
     channel = 3
-    num_classes = 10 
+    num_classes = 2
     batch_size = 16 
-    nb_epoch = 10
+    nb_epoch = 25
 
     # Load Cifar10 data. Please implement your own load_data() module for your own dataset
-    # X_train, Y_train, X_valid, Y_valid = load_cifar10_data(img_rows, img_cols)
-    X_train, Y_train, X_valid, Y_valid = load_vireo_data(data_dir, img_rows)
+    X_train, Y_train, X_valid, Y_valid = load_cifar10_data(img_rows, img_cols)
+    # X_train, Y_train, X_valid, Y_valid = load_vireo_data(data_dir, img_rows)
+
 
     # Load our model
     model = densenet121_model(img_rows=img_rows, img_cols=img_cols, color_type=channel, num_classes=num_classes)

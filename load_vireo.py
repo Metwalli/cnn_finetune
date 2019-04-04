@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from keras.preprocessing.image import img_to_array
 import os
+from keras import backend as K
+from keras.utils import np_utils
 
 def load_vireo_data(data_dir, image_size):
 
@@ -40,6 +42,8 @@ def load_vireo_data(data_dir, image_size):
     # partition the data into training and testing splits using 80% of
     # the data for training and the remaining 20% for testing
     (trainX, testX, trainY, testY) = train_test_split(data, labels, test_size=0.2, random_state=42)
+
+
 
     return trainX, testX, trainY, testY
 
